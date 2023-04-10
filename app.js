@@ -44,4 +44,25 @@ io.on("connect", (socket) => {
       console.log(error);
     }
   });
+
+  socket.on("join-game", async ({ nickName, gameID: _id }) => {
+    try {
+      let game = await Game.findById(_id);
+      if (game.isOpen) {
+        const gameID = game._id.toString();
+        socket.join(gameID);
+
+        let player = {
+          socketID: socket.id,
+          nickName,
+        };
+
+        game.players.push(player);
+        game = await game.save();
+        io.to(gameID).emit("update-game", game);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  });
 });
