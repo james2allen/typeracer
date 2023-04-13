@@ -5,5 +5,5 @@ const uri = "http://api.quotable.io/random";
 module.exports = getData = () => {
   return fetch(uri)
     .then((response) => response.json())
-    .then((data) => data?.content?.split(""));
+    .then((data) => data?.content?.split(" "));
 };
